@@ -35,8 +35,11 @@ def login_function():
 
 @app.route("/template")
 def update_function():
-    return jsonify({"token": "token"}), 202
-
+    #return jsonify({"token": "token"}), 202
+    authorization_value = request.headers.get('Authorization')
+    authorization_value = authorization_value[7:]
+    key = "secret"
+    return jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
 
 
 
