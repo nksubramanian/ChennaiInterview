@@ -35,7 +35,7 @@ def login_function():
 
 @app.route("/template")
 def update_function():
-    return jsonify({"token": ""}), 202
+    return jsonify({"token": "token"}), 202
 
 
 
