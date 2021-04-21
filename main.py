@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request
 import jwt
 import pymongo
+from persistence_gateway import PersistenceGateway
 
 app = Flask(__name__)
+storage = PersistenceGateway()
 
 users = {}
 
@@ -34,22 +36,17 @@ def login_function():
         return jsonify({"token": token}), 202
 
 
-@app.route("/template")
-def update_function():
-    #return jsonify({"token": "token"}), 202
+@app.route("/ftemplate")
+def fupdate_function():
     authorization_value = request.headers.get('Authorization')
     authorization_value = authorization_value[7:]
     key = "secret"
     credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
     email = credentials["email"]
     if users[email] == credentials["password"]:
-        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-        mydb = myclient["mydatabase"]
-        mycol = mydb["customers"]
-        mydict = {"name": "John", "address": "Highway 37"}
-        mydict["_id"] = 53
-        print(mydict)
-        x = mycol.insert_one(mydict)
+        mydict = {"name": "John", "address": "Highway 37", "_id": 99}
+        print("I am here111")
+        storage.add(email, mydict)
         return credentials
     else:
         return {'error': "access denied"}, 401
@@ -60,11 +57,28 @@ def return_function():
     myclient = pymongo.MongoClient("mongodb://localhost:27017/")
     mydb = myclient["mydatabase"]
     mycol = mydb["customers"]
-    x = mycol.find_one({'_id': 53})
+    x = mycol.find_one({'_id': 65})
     print("here i am")
     print(x)
     return x
 
+
+
+@app.route("/template")
+def update_function():
+    authorization_value = request.headers.get('Authorization')
+    authorization_value = authorization_value[7:]
+    key = "secret"
+    credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
+    email = credentials["email"]
+    print("sgsagsa")
+    print(email)
+    if users[email] == credentials["password"]:
+        mydict = {"name": "John", "address": "Highway 37", "_id": 97}
+        storage.add(email, mydict)
+        return credentials
+    else:
+        return {'error': "access denied"}, 401
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)

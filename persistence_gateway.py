@@ -1,10 +1,14 @@
+import pymongo
+
+
 class PersistenceGateway:
-    def __init__(self, client):
-        self.client = client
-        self.db = self.client["mydatabase"]
+    def __init__(self):
+        self.myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        self.mydb = self.myclient["mydatabase"]
+
+    def add(self, collection, mydict):
+        x = self.mydb[collection].insert_one(mydict)
+        print("I am here")
 
     def update(self, collection, id_, data_dictionary):
-        data_dictionary["_id"] = id_
-        result = self.db[collection].replace_one({"_id": id_}, data_dictionary)
-        if result.matched_count == 0:
-            raise ItemNotFound()
+        pass
