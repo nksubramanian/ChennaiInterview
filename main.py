@@ -17,6 +17,7 @@ def register_function():
     email = payload['email']
     password = payload['password']
     users[email] = password
+    print(users)
     return jsonify({'first_name': first_name,
                     "last_name": last_name,
                     'email': email,
@@ -36,31 +37,22 @@ def login_function():
         return jsonify({"token": token}), 202
 
 
-@app.route("/ftemplate")
-def fupdate_function():
+
+@app.route("/checking")
+def get_function():
+    #myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    #mydb = myclient["mydatabase"]
+    #mycol = mydb["customers"]
+    #x = mycol.find_one({'_id': 65})
     authorization_value = request.headers.get('Authorization')
     authorization_value = authorization_value[7:]
     key = "secret"
     credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
     email = credentials["email"]
-    if users[email] == credentials["password"]:
-        mydict = {"name": "John", "address": "Highway 37", "_id": 99}
-        print("I am here111")
-        storage.add(email, mydict)
-        return credentials
-    else:
-        return {'error': "access denied"}, 401
-
-
-@app.route("/checking")
-def return_function():
-    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-    mydb = myclient["mydatabase"]
-    mycol = mydb["customers"]
-    x = mycol.find_one({'_id': 65})
-    print("here i am")
-    print(x)
-    return x
+    print("in the get function")
+    print(email)
+    temp = storage.get(email, 28)
+    return jsonify(temp), 202
 
 
 
@@ -74,7 +66,7 @@ def update_function():
     print("sgsagsa")
     print(email)
     if users[email] == credentials["password"]:
-        mydict = {"name": "John", "address": "Highway 37", "_id": 97}
+        mydict = {"name": "John", "address": "Highway 37", "_id": 28}
         storage.add(email, mydict)
         return credentials
     else:
