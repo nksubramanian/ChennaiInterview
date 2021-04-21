@@ -1,16 +1,13 @@
 from flask import Flask, jsonify, request
 import jwt
-from persistence_gateway import PersistenceGateway
-import pymongo
 
 users = {}
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["mydatabase"]
-persistence_gateway = PersistenceGateway(mydb)
+checker = "1234"
+
 
 class Business:
-    def __init__(self):
-        self.a = 5
+    def __init__(self, persistence_gateway):
+        self.persistence_gateway = persistence_gateway
 
     def register(self, r):
         payload = r.get_json()
@@ -19,11 +16,7 @@ class Business:
         email = payload['email']
         password = payload['password']
         users[email] = password
-
-        return jsonify({'first_name': first_name,
-                        "last_name": last_name,
-                        'email': email,
-                        'password': password}), 202
+        return " ", 202
 
     def get(self, r):
         authorization_value = r.headers.get('Authorization')
@@ -31,7 +24,7 @@ class Business:
         key = "secret"
         credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
         email = credentials["email"]
-        temp = persistence_gateway.get(email, 1111)
+        temp = self.persistence_gateway.get(email, checker)
         return jsonify(temp), 202
 
     def update(self, r):
@@ -41,8 +34,8 @@ class Business:
         credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")# try
         email = credentials["email"]
         if email in users.keys():
-            mydict = {"name": "John", "address": "Highway 37", "_id": 1111}
-            persistence_gateway.add(email, mydict)
+            mydict = {"name": "John", "address": "Highway 37", "_id": checker}
+            self.persistence_gateway.add(email, mydict)
             print("donebngdhnjtgjhnfgjmfgjfgjfgjrtj")
             return credentials
         else:

@@ -1,12 +1,15 @@
 from flask import Flask, jsonify, request
 import jwt
-import pymongo
-from persistence_gateway import PersistenceGateway
 from business import Business
+from persistence_gateway import PersistenceGateway
+import pymongo
 
 app = Flask(__name__)
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["mydatabase"]
+persistence_gateway = PersistenceGateway(mydb)
+t = Business(persistence_gateway)
 
-t = Business()
 
 @app.route("/register")
 def register_function():
