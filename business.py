@@ -1,9 +1,12 @@
 from flask import Flask, jsonify, request
 import jwt
 from persistence_gateway import PersistenceGateway
+import pymongo
 
 users = {}
-storage = PersistenceGateway()
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["mydatabase"]
+persistence_gateway = PersistenceGateway(mydb)
 
 class Business:
     def __init__(self):
@@ -28,7 +31,7 @@ class Business:
         key = "secret"
         credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
         email = credentials["email"]
-        temp = storage.get(email, 101)
+        temp = persistence_gateway.get(email, 1111)
         return jsonify(temp), 202
 
     def update(self, r):
@@ -38,8 +41,8 @@ class Business:
         credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")# try
         email = credentials["email"]
         if email in users.keys():
-            mydict = {"name": "John", "address": "Highway 37", "_id": 101}
-            storage.add(email, mydict)
+            mydict = {"name": "John", "address": "Highway 37", "_id": 1111}
+            persistence_gateway.add(email, mydict)
             print("donebngdhnjtgjhnfgjmfgjfgjfgjrtj")
             return credentials
         else:

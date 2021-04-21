@@ -3,8 +3,8 @@ import jwt
 import pymongo
 from persistence_gateway import PersistenceGateway
 from business import Business
+
 app = Flask(__name__)
-users = {}
 
 t = Business()
 
