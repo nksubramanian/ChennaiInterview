@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, request
 import jwt
+import pymongo
 
 app = Flask(__name__)
 
-credentials = {}
+users = {}
 
 
 @app.route("/register")
@@ -13,7 +14,7 @@ def register_function():
     last_name = payload['last_name']
     email = payload['email']
     password = payload['password']
-    credentials[email] = password
+    users[email] = password
     return jsonify({'first_name': first_name,
                     "last_name": last_name,
                     'email': email,
@@ -25,7 +26,7 @@ def login_function():
     payload = request.get_json()
     email = payload['email']
     password = payload['password']
-    if credentials[email] != password:
+    if users[email] != password:
         return {'error': "access denied"}, 401
     else:
         key = "secret"
@@ -39,8 +40,30 @@ def update_function():
     authorization_value = request.headers.get('Authorization')
     authorization_value = authorization_value[7:]
     key = "secret"
-    return jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
+    credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
+    email = credentials["email"]
+    if users[email] == credentials["password"]:
+        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        mydb = myclient["mydatabase"]
+        mycol = mydb["customers"]
+        mydict = {"name": "John", "address": "Highway 37"}
+        mydict["_id"] = 53
+        print(mydict)
+        x = mycol.insert_one(mydict)
+        return credentials
+    else:
+        return {'error': "access denied"}, 401
 
+
+@app.route("/checking")
+def return_function():
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb = myclient["mydatabase"]
+    mycol = mydb["customers"]
+    x = mycol.find_one({'_id': 53})
+    print("here i am")
+    print(x)
+    return x
 
 
 if __name__ == '__main__':
