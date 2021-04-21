@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request
+from authorization import Authorization
 import jwt
 
 users = {}
-checker = "1234"
+tx = Authorization()
+checker = "hghfg"
 
 
 class Business:
@@ -16,9 +18,10 @@ class Business:
         email = payload['email']
         password = payload['password']
         users[email] = password
+        tx.add_users(email, password)
         return " ", 202
 
-    def get(self, r):
+    def get_all(self, r):
         authorization_value = r.headers.get('Authorization')
         authorization_value = authorization_value[7:]
         key = "secret"
@@ -27,7 +30,7 @@ class Business:
         temp = self.persistence_gateway.get(email, checker)
         return jsonify(temp), 202
 
-    def update(self, r):
+    def insert(self, r):
         authorization_value = r.headers.get('Authorization')
         authorization_value = authorization_value[7:]
         key = "secret"
@@ -46,6 +49,7 @@ class Business:
         payload = r.get_json()
         email = payload['email']
         password = payload['password']
+        print(tx.check_user(email, password))
         if users[email] == password:
             key = "secret"
             token = jwt.encode({"email": email, "password": password}, key, algorithm="HS256").decode("UTF-8")
