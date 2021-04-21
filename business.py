@@ -1,8 +1,11 @@
 from flask import Flask, jsonify, request
 import jwt
 from persistence_gateway import PersistenceGateway
-users = {}
+from database import Database
 
+temporary = Database()
+#mydb = temporary.database_return()
+users = {}
 storage = PersistenceGateway()
 
 class Business:
@@ -16,7 +19,11 @@ class Business:
         email = payload['email']
         password = payload['password']
         users[email] = password
-        print(users)
+
+        return jsonify({'first_name': first_name,
+                        "last_name": last_name,
+                        'email': email,
+                        'password': password}), 202
 
     def get(self, r):
         authorization_value = r.headers.get('Authorization')
