@@ -3,11 +3,9 @@ import jwt
 import pymongo
 from persistence_gateway import PersistenceGateway
 from business import Business
-
 app = Flask(__name__)
-#storage = PersistenceGateway()
-
 users = {}
+
 t = Business()
 
 @app.route("/register")
