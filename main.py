@@ -33,24 +33,18 @@ def login_function():
         return {'error': "access denied"}, 401
     else:
         key = "secret"
-        token = jwt.encode({"email": email, "password": password}, key, algorithm="HS256").decode("UTF-8")
+        token = jwt.encode({"email": email}, key, algorithm="HS256").decode("UTF-8")
         return jsonify({"token": token}), 202
 
 
 
 @app.route("/checking")
 def get_function():
-    #myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-    #mydb = myclient["mydatabase"]
-    #mycol = mydb["customers"]
-    #x = mycol.find_one({'_id': 65})
     authorization_value = request.headers.get('Authorization')
     authorization_value = authorization_value[7:]
     key = "secret"
     credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
     email = credentials["email"]
-    print("in the get function")
-    print(email)
     temp = storage.get(email, 28)
     return jsonify(temp), 202
 
@@ -61,15 +55,15 @@ def update_function():
     authorization_value = request.headers.get('Authorization')
     authorization_value = authorization_value[7:]
     key = "secret"
-    credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
+    credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")# try
     email = credentials["email"]
-    print("sgsagsa")
-    print(email)
-    if users[email] == credentials["password"]:
-        mydict = {"name": "John", "address": "Highway 37", "_id": 28}
+    if email in users.keys():
+        mydict = {"name": "John", "address": "Highway 37", "_id": 77}
         storage.add(email, mydict)
+        print("donebngdhnjtgjhnfgjmfgjfgjfgjrtj")
         return credentials
     else:
+        print("I am not allowed")
         return {'error': "access denied"}, 401
 
 if __name__ == '__main__':
