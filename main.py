@@ -1,10 +1,13 @@
 from flask import Flask, jsonify, request
+import jwt
+
 app = Flask(__name__)
 
 credentials = {}
 
+
 @app.route("/register")
-def create_audio_file():
+def register_function():
     payload = request.get_json()
     first_name = payload['first_name']
     last_name = payload['last_name']
@@ -18,17 +21,21 @@ def create_audio_file():
 
 
 @app.route("/login")
-def ccc():
+def login_function():
     payload = request.get_json()
     email = payload['email']
     password = payload['password']
-    if credentials[email] = password
+    if credentials[email] != password:
+        return {'error': "access denied"}, 401
+    else:
+        key = "secret"
+        token = jwt.encode({"email": email, "password": password}, key, algorithm="HS256").decode("UTF-8")
+        return jsonify({"token": token}), 202
 
 
-    #return jsonify({'room_id': xxx, "second": xxx}), 202
-    #print("I am here")
-    #print(credentials)
-    #return jsonify(credentials), 202
+@app.route("/template")
+def update_function():
+    return jsonify({"token": ""}), 202
 
 
 
