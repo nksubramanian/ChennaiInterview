@@ -26,7 +26,7 @@ class Business:
         temp = self.persistence_gateway.get(email, checker)
         return jsonify(temp), 202
 
-    def insert(self, email, authorization_value, payload):
+    def insert(self, email, payload):
         payload['email'] = email
         x = self.persistence_gateway.add(payload)
         return x
