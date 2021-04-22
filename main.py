@@ -59,9 +59,11 @@ def get_all():
 @app.route("/template/<template_id>", methods=['PUT'])
 def update(template_id):
     token = request.headers.get('Authorization')
-    email = authorization.get_email(authorization_value)
     payload = request.get_json()
-    template_service.update(email, payload, template_id)
+    template_name = payload['template_name']
+    subject = payload['subject']
+    body = payload['body']
+    template_service.update(token, template_name, subject, body, template_id)
     return {'message': "successful"}, 200
 
 
