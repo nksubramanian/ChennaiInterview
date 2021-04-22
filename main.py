@@ -61,9 +61,8 @@ def update_function(template_id):
     authorization_value = request.headers.get('Authorization')
     email = authorization.authorize_user(authorization_value)
     payload = request.get_json()
-    x = t.update(email, payload, template_id)
-    return jsonify(x)
-
+    t.update(email, payload, template_id)
+    return {'message': "successful"}, 200
 
 
 if __name__ == '__main__':

@@ -33,6 +33,6 @@ class Business:
     def update(self, email, payload, template_id):
         payload['email'] = email
         x = self.persistence_gateway.update(payload, template_id)
-        return x
+
 
 

@@ -32,6 +32,6 @@ class PersistenceGateway:
         if x['email'] == payload['email']:
             result = self.templates_db['collection'].replace_one({"_id": ObjectId(template_id)}, payload)
 
-            
+
 
 
