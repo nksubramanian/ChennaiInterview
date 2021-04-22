@@ -1,9 +1,5 @@
-from flask import jsonify
-from authorization import Authorization
-import jwt
-import hashlib, uuid
-
-details = {}
+import hashlib
+import uuid
 
 
 class Business:
@@ -49,12 +45,8 @@ class Business:
 
     def update(self, token, template_name, subject, body, template_id):
         email = self.authorization.get_email(token)
-
-        x = self.persistence_gateway.update(template_name, subject, body, email, template_id)
+        self.persistence_gateway.update(template_name, subject, body, email, template_id)
 
     def delete(self, token, template_id):
         email = self.authorization.get_email(token)
-        x = self.persistence_gateway.delete(email, template_id)
-
-
-
+        self.persistence_gateway.delete(email, template_id)
