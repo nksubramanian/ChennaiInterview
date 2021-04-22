@@ -6,8 +6,8 @@ details = {}
 
 
 class Business:
-    def __init__(self, persistence_gateway, authorization):
-        self.persistence_gateway = persistence_gateway
+    def __init__(self, template_repository, authorization):
+        self.persistence_gateway = template_repository
         self.authorization = authorization
 
     def register(self, email, password, first_name, last_name):
