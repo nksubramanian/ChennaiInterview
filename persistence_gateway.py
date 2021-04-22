@@ -8,10 +8,9 @@ class PersistenceGateway:
     def __init__(self, templates_db):
         self.templates_db = templates_db
 
-
-
-    def add(self, mydict):
-        x = self.__get_collection().insert_one(mydict).inserted_id
+    def insert(self, email, template_name, subject, body):
+        payload = {'template_name': template_name, 'subject': subject, 'body': body, 'email': email}
+        x = self.__get_collection().insert_one(payload).inserted_id
         return str(x)
 
     def update(self, template_name, subject, body, email, template_id):

@@ -25,8 +25,7 @@ class Business:
 
     def insert(self, token, template_name, subject, body):
         email = self.authorization.get_email(token)
-        payload = {'template_name': template_name, 'subject': subject, 'body': body, 'email': email}
-        x = self.persistence_gateway.add(payload)
+        x = self.persistence_gateway.insert(email, template_name, subject, body)
         return x
 
     def get(self, template_id, token):
