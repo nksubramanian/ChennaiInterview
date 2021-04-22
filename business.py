@@ -19,13 +19,9 @@ class Business:
         temp = self.persistence_gateway.get_all(email)
         return temp
 
-    def insert(self, authorization_value, template_name, subject, body):
-        payload = {}
-        email = self.authorization.get_claim(authorization_value)
-        payload['template_name'] = template_name
-        payload['subject'] = subject
-        payload['body'] = body
-        payload['email'] = email
+    def insert(self, token, template_name, subject, body):
+        email = self.authorization.get_email(token)
+        payload = {'template_name': template_name, 'subject': subject, 'body': body, 'email': email}
         x = self.persistence_gateway.add(payload)
         return x
 
