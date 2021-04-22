@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 import jwt
 from business import Business
-from persistence_gateway import PersistenceGateway
+from persistence_gateway import TemplateRepository
 from authorization import Authorization
 import pymongo
 
@@ -10,7 +10,7 @@ app = Flask(__name__)
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 templates_db = myclient["mydatabase"]
 authorization = Authorization()
-persistence_gateway = PersistenceGateway(templates_db)
+persistence_gateway = TemplateRepository(templates_db)
 template_service = Business(persistence_gateway, authorization)
 
 

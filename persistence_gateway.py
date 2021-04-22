@@ -1,7 +1,7 @@
 from bson import ObjectId
 
 
-class PersistenceGateway:
+class TemplateRepository:
     def __init__(self, templates_db):
         self.templates_db = templates_db
 
