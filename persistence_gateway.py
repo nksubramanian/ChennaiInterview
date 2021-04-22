@@ -12,7 +12,7 @@ class PersistenceGateway:
         return str(x)
 
     def get(self, template_id, email):
-        x = self.templates_db['collection'].find_one({'_id': ObjectId(template_id), 'email': email})
+        x = self.templates_db['collection'].find_one(self.__create_query(email, template_id))
         x['template_id'] = str(x.pop('_id'))
         del x['email']
         return x
@@ -26,16 +26,20 @@ class PersistenceGateway:
         return results
 
     def update(self, payload, template_id):
-        query = {"_id": ObjectId(template_id), "email": payload["email"]}
+        email = payload["email"]
+        query = self.__create_query(email, template_id)
         result = self.templates_db['collection'].replace_one(query, payload)
         if result.matched_count == 0:
             raise InvalidOperation()
 
     def delete(self, email,  template_id):
-        query = {"_id": ObjectId(template_id), "email": email}
+        query = self.__create_query(email, template_id)
         result = self.templates_db['collection'].delete_one(query)
         if result.deleted_count == 0:
             raise InvalidOperation("This operation is not permitted")
+
+    def __create_query(self, email, template_id):
+        return {"_id": ObjectId(template_id), "email": email}
 
 
 class InvalidOperation(Exception):
