@@ -19,6 +19,8 @@ class TemplateRepository:
 
     def get(self, template_id, email):
         doc = self.__get_collection().find_one(self.__create_query(email, template_id))
+        if doc is None:
+            raise InvalidOperation()
         return self.__transform_doc(doc)
 
     def get_all(self, email):
