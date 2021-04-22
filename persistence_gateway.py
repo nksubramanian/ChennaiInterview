@@ -5,15 +5,19 @@ class UserRepository:
     def __init__(self, templates_db):
         self.templates_db = templates_db
 
-    def create_user(self, first_name, last_name, email, password_hash):
-        obj = {"_id": email, "first_name": first_name, "last_name": last_name, "password_hash": password_hash}
+    def create_user(self, first_name, last_name, email, password_hash, salt):
+        obj = {"_id": email,
+               "first_name": first_name,
+               "last_name": last_name,
+               "password_hash": password_hash,
+               "salt": salt}
         self.__get_user_collection().insert_one(obj)
 
     def __get_user_collection(self):
         return self.templates_db['users']
 
     def get_user(self, email):
-        user = self.__get_user_collection().find_one({"_id", email})
+        user = self.__get_user_collection().find_one({"_id": email})
         if user is None:
             raise InvalidOperation()
         return user

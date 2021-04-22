@@ -1,6 +1,7 @@
 from flask import jsonify
 from authorization import Authorization
 import jwt
+import hashlib, uuid
 
 details = {}
 
@@ -12,12 +13,24 @@ class Business:
         self.user_repository = user_repository
 
     def register(self, email, password, first_name, last_name):
-        details[email] = [first_name, last_name]
-        self.authorization.add_users(email, password)
-        print(details)
+        salt = uuid.uuid4().hex
+        hashed_password = self.hash_password(password, salt)
+        self.user_repository.create_user(first_name, last_name, email, hashed_password, salt)
+
+    @staticmethod
+    def hash_password(password, salt):
+        x = password + salt
+        hashed_password = hashlib.sha512(x.encode('utf-8')).hexdigest()
+        return hashed_password
 
     def login(self, email, password):
-        return self.authorization.check_user_credentials(email, password)
+        user = self.user_repository.get_user(email)
+        salt = user["salt"]
+        hashed_password_db = user["password_hash"]
+        hashed_password = self.hash_password(password, salt)
+        if hashed_password_db == hashed_password:
+            return self.authorization.get_token(email)
+        raise Exception()
 
     def get_all(self, token):
         email = self.authorization.get_email(token)
