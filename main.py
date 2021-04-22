@@ -9,9 +9,9 @@ import pymongo
 app = Flask(__name__)
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 templates_db = myclient["mydatabase"]
-authorization_db = Authorization()
+authorization = Authorization()
 persistence_gateway = PersistenceGateway(templates_db)
-t = Business(persistence_gateway, authorization_db)
+t = Business(persistence_gateway, authorization)
 
 
 @app.route("/register", methods=['POST'])
@@ -21,20 +21,17 @@ def register_function():
     last_name = payload['last_name']
     email = payload['email']
     password = payload['password']
-    t.register(email, password)
+    t.register(email, password, first_name, last_name)
     return "", 202
-
-
 
 @app.route("/login", methods=['POST'])
 def login_function():
     payload = request.get_json()
     email = payload['email']
     password = payload['password']
-    token = authorization_db.check_user_credentials(email, password)
+    token = authorization.check_user_credentials(email, password)
     return jsonify({"token": token}), 202
-
-
+    #return {'error': "access denied"}, 401
 
 @app.route("/checking")
 def get_all_function():
@@ -45,7 +42,7 @@ def get_all_function():
 def insert_function():
     authorization_value = request.headers.get('Authorization')
     authorization_value = authorization_value[7:]
-    claim = authorization_db.get_claim(authorization_value)
+    claim = authorization.get_claim(authorization_value)
     email = claim["email"]
     payload = request.get_json()
     x = t.insert(email, authorization_value, payload)

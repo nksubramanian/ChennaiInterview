@@ -1,15 +1,20 @@
 import pymongo
+from bson import ObjectId
 
 
 class PersistenceGateway:
-    def __init__(self, mydb):
-        self.mydb = mydb
+    def __init__(self, templates_db):
+        self.templates_db = templates_db
+
+    def add(self, mydict):
+        x = self.templates_db['collection'].insert_one(mydict).inserted_id
+        y = str(ObjectId(x))
+        return y
+
+    def get(self, template_id, token):
+        x = self.templates_db['collection'].find_one({'_id': ObjectId(template_id)})
+        x['_id'] = template_id
+        if x['token'] == token:
+            return x
 
 
-    def add(self, collection, mydict):
-        x = self.mydb[collection].insert_one(mydict)
-
-    def get(self, collection, identity):
-        x = self.mydb[collection].find_one({'_id': identity})
-        x['id'] = x.pop('_id')
-        return x
