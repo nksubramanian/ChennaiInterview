@@ -30,7 +30,9 @@ class PersistenceGateway:
         query = {"_id": ObjectId(template_id), "email": payload["email"]}
         result = self.templates_db['collection'].replace_one(query, payload)
 
-    def delete(self, payload, template_id):
-        pass
+    def delete(self, email,  template_id):
+        query = {"_id": ObjectId(template_id), "email": email}
+        result = self.templates_db['collection'].delete_one(query)
+        print(result)
 
 
