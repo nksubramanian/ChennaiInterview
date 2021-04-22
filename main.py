@@ -1,17 +1,18 @@
 from flask import Flask, jsonify, request
 import jwt
 from business import Business
-from persistence_gateway import TemplateRepository
+from persistence_gateway import TemplateRepository, UserRepository
 from authorization import Authorization
 import pymongo
 
 
 app = Flask(__name__)
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-templates_db = myclient["mydatabase"]
+mongo_client = pymongo.MongoClient("mongodb://localhost:27017/")
+templates_db = mongo_client["mydatabase"]
 authorization = Authorization()
-persistence_gateway = TemplateRepository(templates_db)
-template_service = Business(persistence_gateway, authorization)
+template_repository = TemplateRepository(templates_db)
+user_repository = UserRepository(templates_db)
+template_service = Business(template_repository, authorization, user_repository)
 
 
 @app.route("/register", methods=['POST'])
