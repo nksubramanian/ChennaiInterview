@@ -19,9 +19,19 @@ class PersistenceGateway:
 
     def get_all(self, email):
         results = []
-        for doc in self.templates_db['collection'].find({"email":email}):
+        for doc in self.templates_db['collection'].find({"email": email}):
             doc['template_id'] = str(doc.pop('_id'))
             del doc['email']
             results.append(doc)
         print(results)
         return results
+
+    def update(self, payload, template_id):
+        query = {"_id": ObjectId(template_id)}
+        x = self.templates_db['collection'].find_one(query)
+        if x['email'] == payload['email']:
+            result = self.templates_db['collection'].replace_one({"_id": ObjectId(template_id)}, payload)
+
+            
+
+

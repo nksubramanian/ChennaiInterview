@@ -56,6 +56,14 @@ def get_all_function():
     temp = t.get_all(email)
     return jsonify(temp), 202
 
+@app.route("/template/<template_id>", methods=['PUT'])
+def update_function(template_id):
+    authorization_value = request.headers.get('Authorization')
+    email = authorization.authorize_user(authorization_value)
+    payload = request.get_json()
+    x = t.update(email, payload, template_id)
+    return jsonify(x)
+
 
 
 if __name__ == '__main__':

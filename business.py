@@ -30,3 +30,9 @@ class Business:
         x = self.persistence_gateway.get(template_id, email)
         return x
 
+    def update(self, email, payload, template_id):
+        payload['email'] = email
+        x = self.persistence_gateway.update(payload, template_id)
+        return x
+
+
