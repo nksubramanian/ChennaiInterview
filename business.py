@@ -3,7 +3,7 @@ from authorization import Authorization
 import jwt
 
 details = {}
-authorization1 = Authorization()
+
 
 class Business:
     def __init__(self, persistence_gateway, authorization):
