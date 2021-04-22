@@ -1,7 +1,4 @@
-import pymongo
 from bson import ObjectId
-import copy
-
 
 
 class PersistenceGateway:
@@ -43,10 +40,10 @@ class PersistenceGateway:
     def __get_collection(self):
         return self.templates_db['collection']
 
-    def __create_query(self, email, template_id):
+    @staticmethod
+    def __create_query(email, template_id):
         return {"_id": ObjectId(template_id), "email": email}
 
 
 class InvalidOperation(Exception):
     pass
-
