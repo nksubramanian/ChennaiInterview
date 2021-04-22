@@ -24,7 +24,6 @@ class Authorization:
         return claim
 
     def get_email(self, authorization_value):
-        authorization_value = authorization_value[7:]
         claim = self._decode(authorization_value)
         email = claim["email"]
         return email
