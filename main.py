@@ -41,9 +41,7 @@ def get_all_function():
 @app.route("/template", methods=['POST'])
 def insert_function():
     authorization_value = request.headers.get('Authorization')
-    authorization_value = authorization_value[7:]
-    claim = authorization.get_claim(authorization_value)
-    email = claim["email"]
+    email = authorization.authorize_user(authorization_value)
     payload = request.get_json()
     x = t.insert(email, authorization_value, payload)
     return {'id': x}, 200
@@ -52,8 +50,8 @@ def insert_function():
 @app.route("/template/<template_id>", methods=['GET'])
 def get_function(template_id):
     authorization_value = request.headers.get('Authorization')
-    authorization_value = authorization_value[7:]
-    x = t.get(template_id, authorization_value)
+    email = authorization.authorize_user(authorization_value)
+    x = t.get(template_id, email)
     return jsonify(x)
 
 

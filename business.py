@@ -27,11 +27,11 @@ class Business:
         return jsonify(temp), 202
 
     def insert(self, email, authorization_value, payload):
-        payload['token'] = authorization_value
+        payload['email'] = email
         x = self.persistence_gateway.add(payload)
         return x
 
-    def get(self, template_id, token):
-        x = self.persistence_gateway.get(template_id, token)
+    def get(self, template_id, email):
+        x = self.persistence_gateway.get(template_id, email)
         return x
 

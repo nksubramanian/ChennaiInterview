@@ -11,10 +11,11 @@ class PersistenceGateway:
         y = str(ObjectId(x))
         return y
 
-    def get(self, template_id, token):
+    def get(self, template_id, email):
         x = self.templates_db['collection'].find_one({'_id': ObjectId(template_id)})
-        x['_id'] = template_id
-        if x['token'] == token:
+        x['template_id'] = x.pop('_id')
+        x['template_id'] = template_id
+        if x['email'] == email:
             return x
 
 
