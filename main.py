@@ -64,6 +64,17 @@ def update_function(template_id):
     t.update(email, payload, template_id)
     return {'message': "successful"}, 200
 
+@app.route("/template/<template_id>", methods=['PUT'])
+def delete_function(template_id):
+    authorization_value = request.headers.get('Authorization')
+    email = authorization.authorize_user(authorization_value)
+    payload = request.get_json()
+    t.delete(email, payload, template_id)
+    return {'message': "successful"}, 200
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)
