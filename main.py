@@ -31,7 +31,6 @@ def login_function():
     password = payload['password']
     token = authorization.check_user_credentials(email, password)
     return jsonify({"token": token}), 202
-    #return {'error': "access denied"}, 401
 
 @app.route("/template", methods=['POST'])
 def insert_function():
@@ -50,12 +49,13 @@ def get_function(template_id):
     return jsonify(x)
 
 
-@app.route("/template")
+@app.route("/template", methods=['GET'])
 def get_all_function():
     authorization_value = request.headers.get('Authorization')
     email = authorization.authorize_user(authorization_value)
-    t.get_all(
-        email)
+    temp = t.get_all(email)
+    return jsonify(temp), 202
+
 
 
 if __name__ == '__main__':

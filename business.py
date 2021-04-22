@@ -19,7 +19,7 @@ class Business:
 
     def get_all(self, email):
         temp = self.persistence_gateway.get_all(email)
-        return jsonify(temp), 202
+        return temp
 
     def insert(self, email, payload):
         payload['email'] = email

@@ -1,5 +1,6 @@
 import pymongo
 from bson import ObjectId
+import copy
 
 
 class PersistenceGateway:
@@ -13,16 +14,14 @@ class PersistenceGateway:
     def get(self, template_id, email):
         x = self.templates_db['collection'].find_one({'_id': ObjectId(template_id), 'email': email})
         x['template_id'] = str(x.pop('_id'))
+        del x['email']
         return x
 
-
-
-
     def get_all(self, email):
-        x = self.templates_db['collection'].find_one({'email': email})
-        x['template_id'] = x.pop('_id')
-        x['template_id'] = template_id
-        if x['email'] == email:
-            return x
-
-
+        results = []
+        for doc in self.templates_db['collection'].find({"email":email}):
+            doc['template_id'] = str(doc.pop('_id'))
+            del doc['email']
+            results.append(doc)
+        print(results)
+        return results
