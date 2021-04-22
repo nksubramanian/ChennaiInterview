@@ -34,8 +34,7 @@ def login():
 
 @app.route("/template", methods=['POST'])
 def insert():
-    authorization_value = get_token(request)
-    token = authorization_value[7:]
+    token = get_token(request)
     record = request.get_json()
     template_name = record['template_name']
     subject = record['subject']
@@ -46,23 +45,20 @@ def insert():
 
 @app.route("/template/<template_id>", methods=['GET'])
 def get(template_id):
-    authorization_value = get_token(request)
-    token = authorization_value[7:]
+    token = get_token(request)
     x = template_service.get(template_id, token)
     return jsonify(x), 200
 
 
 @app.route("/template", methods=['GET'])
 def get_all():
-    authorization_value = get_token(request)
-    token = authorization_value[7:]
+    token = get_token(request)
     temp = template_service.get_all(token)
     return jsonify(temp), 202
 
 @app.route("/template/<template_id>", methods=['PUT'])
 def update(template_id):
-    authorization_value = get_token(request)
-    token = authorization_value[7:]
+    token = get_token(request)
     record = request.get_json()
     template_name = record['template_name']
     subject = record['subject']
@@ -73,15 +69,15 @@ def update(template_id):
 
 @app.route("/template/<template_id>", methods=['DELETE'])
 def delete(template_id):
-    authorization_value = get_token(request)
-    token = authorization_value[7:]
+    token = get_token(request)
     template_service.delete(token, template_id)
     return {'message': "successful"}, 200
 
 
 def get_token(request_):
     authorization_value = request_.headers.get('Authorization')
-    return authorization_value
+    token = authorization_value[7:]
+    return token
 
 
 if __name__ == '__main__':
