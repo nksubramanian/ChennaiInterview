@@ -23,16 +23,21 @@ class PersistenceGateway:
             doc['template_id'] = str(doc.pop('_id'))
             del doc['email']
             results.append(doc)
-        print(results)
         return results
 
     def update(self, payload, template_id):
         query = {"_id": ObjectId(template_id), "email": payload["email"]}
         result = self.templates_db['collection'].replace_one(query, payload)
+        if result.matched_count == 0:
+            raise InvalidOperation()
 
     def delete(self, email,  template_id):
         query = {"_id": ObjectId(template_id), "email": email}
         result = self.templates_db['collection'].delete_one(query)
-        print(result)
+        if result.deleted_count == 0:
+            raise InvalidOperation("This operation is not permitted")
 
+
+class InvalidOperation(Exception):
+    pass
 

@@ -15,7 +15,7 @@ t = Business(persistence_gateway, authorization)
 
 
 @app.route("/register", methods=['POST'])
-def register_function():
+def register():
     payload = request.get_json()
     first_name = payload['first_name']
     last_name = payload['last_name']
@@ -25,7 +25,7 @@ def register_function():
     return "", 202
 
 @app.route("/login", methods=['POST'])
-def login_function():
+def login():
     payload = request.get_json()
     email = payload['email']
     password = payload['password']
@@ -33,42 +33,44 @@ def login_function():
     return jsonify({"token": token}), 202
 
 @app.route("/template", methods=['POST'])
-def insert_function():
+def insert():
     authorization_value = request.headers.get('Authorization')
-    email = authorization.authorize_user(authorization_value) #returns null if tampered
     payload = request.get_json()
-    x = t.insert(email, payload)
+    template_name = payload['template_name']
+    subject = payload['subject']
+    body = payload['body']
+    x = t.insert(authorization_value, template_name, subject, body)
     return {'template_id': x}, 200
 
 
 @app.route("/template/<template_id>", methods=['GET'])
-def get_function(template_id):
+def get(template_id):
     authorization_value = request.headers.get('Authorization')
-    email = authorization.authorize_user(authorization_value)
+    email = authorization.get_claim(authorization_value)
     x = t.get(template_id, email)
     return jsonify(x)
 
 
 @app.route("/template", methods=['GET'])
-def get_all_function():
+def get_all():
     authorization_value = request.headers.get('Authorization')
-    email = authorization.authorize_user(authorization_value)
+    email = authorization.get_claim(authorization_value)
     temp = t.get_all(email)
     return jsonify(temp), 202
 
 @app.route("/template/<template_id>", methods=['PUT'])
-def update_function(template_id):
+def update(template_id):
     authorization_value = request.headers.get('Authorization')
-    email = authorization.authorize_user(authorization_value)
+    email = authorization.get_claim(authorization_value)
     payload = request.get_json()
     t.update(email, payload, template_id)
     return {'message': "successful"}, 200
 
 
 @app.route("/template/<template_id>", methods=['DELETE'])
-def delete_function(template_id):
+def delete(template_id):
     authorization_value = request.headers.get('Authorization')
-    email = authorization.authorize_user(authorization_value)
+    email = authorization.get_claim(authorization_value)
     payload = request.get_json()
     t.delete(email, template_id)
     return {'message': "successful"}, 200

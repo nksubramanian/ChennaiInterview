@@ -3,25 +3,28 @@ from authorization import Authorization
 import jwt
 
 details = {}
-tx = Authorization()
-checker = "65"
-
+authorization1 = Authorization()
 
 class Business:
-    def __init__(self, persistence_gateway, authorization_db):
+    def __init__(self, persistence_gateway, authorization):
         self.persistence_gateway = persistence_gateway
-        self.authorization_db = authorization_db
+        self.authorization = authorization
 
     def register(self, email, password, first_name, last_name):
         details[email] = [first_name, last_name]
-        self.authorization_db.add_users(email, password)
+        self.authorization.add_users(email, password)
         print(details)
 
     def get_all(self, email):
         temp = self.persistence_gateway.get_all(email)
         return temp
 
-    def insert(self, email, payload):
+    def insert(self, authorization_value, template_name, subject, body):
+        payload = {}
+        email = self.authorization.get_claim(authorization_value)
+        payload['template_name'] = template_name
+        payload['subject'] = subject
+        payload['body'] = body
         payload['email'] = email
         x = self.persistence_gateway.add(payload)
         return x
