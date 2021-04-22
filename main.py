@@ -29,7 +29,7 @@ def login():
     payload = request.get_json()
     email = payload['email']
     password = payload['password']
-    token = authorization.check_user_credentials(email, password)
+    token = template_service.login(email, password)
     return jsonify({"token": token}), 202
 
 @app.route("/template", methods=['POST'])
@@ -45,22 +45,20 @@ def insert():
 
 @app.route("/template/<template_id>", methods=['GET'])
 def get(template_id):
-    authorization_value = request.headers.get('Authorization')
-    email = authorization.get_email(authorization_value)
-    x = template_service.get(template_id, email)
-    return jsonify(x)
+    token = request.headers.get('Authorization')
+    x = template_service.get(template_id, token)
+    return jsonify(x), 200
 
 
 @app.route("/template", methods=['GET'])
 def get_all():
-    authorization_value = request.headers.get('Authorization')
-    email = authorization.get_email(authorization_value)
-    temp = template_service.get_all(email)
+    token = request.headers.get('Authorization')
+    temp = template_service.get_all(token)
     return jsonify(temp), 202
 
 @app.route("/template/<template_id>", methods=['PUT'])
 def update(template_id):
-    authorization_value = request.headers.get('Authorization')
+    token = request.headers.get('Authorization')
     email = authorization.get_email(authorization_value)
     payload = request.get_json()
     template_service.update(email, payload, template_id)

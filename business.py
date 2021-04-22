@@ -15,7 +15,11 @@ class Business:
         self.authorization.add_users(email, password)
         print(details)
 
-    def get_all(self, email):
+    def login(self, email, password):
+        return self.authorization.check_user_credentials(email, password)
+
+    def get_all(self, token):
+        email = self.authorization.get_email(token)
         temp = self.persistence_gateway.get_all(email)
         return temp
 
@@ -25,7 +29,8 @@ class Business:
         x = self.persistence_gateway.add(payload)
         return x
 
-    def get(self, template_id, email):
+    def get(self, template_id, token):
+        email = self.authorization.get_email(token)
         x = self.persistence_gateway.get(template_id, email)
         return x
 
