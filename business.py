@@ -17,13 +17,8 @@ class Business:
         self.authorization_db.add_users(email, password)
         print(details)
 
-    def get_all(self, r):
-        authorization_value = r.headers.get('Authorization')
-        authorization_value = authorization_value[7:]
-        key = "secret"
-        credentials = jwt.decode(authorization_value, key, verify=True, algorithm="HS256")
-        email = credentials["email"]
-        temp = self.persistence_gateway.get(email, checker)
+    def get_all(self, email):
+        temp = self.persistence_gateway.get_all(email)
         return jsonify(temp), 202
 
     def insert(self, email, payload):

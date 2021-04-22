@@ -49,9 +49,13 @@ def get_function(template_id):
     x = t.get(template_id, email)
     return jsonify(x)
 
-@app.route("/checking")
+
+@app.route("/template")
 def get_all_function():
-    return t.get_all(request)
+    authorization_value = request.headers.get('Authorization')
+    email = authorization.authorize_user(authorization_value)
+    t.get_all(
+        email)
 
 
 if __name__ == '__main__':
