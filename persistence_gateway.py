@@ -3,27 +3,16 @@ from bson import ObjectId
 import copy
 
 
+
 class PersistenceGateway:
     def __init__(self, templates_db):
         self.templates_db = templates_db
 
+
+
     def add(self, mydict):
         x = self.__get_collection().insert_one(mydict).inserted_id
         return str(x)
-
-    def get(self, template_id, email):
-        x = self.__get_collection().find_one(self.__create_query(email, template_id))
-        x['template_id'] = str(x.pop('_id'))
-        del x['email']
-        return x
-
-    def get_all(self, email):
-        results = []
-        for doc in self.__get_collection().find({"email": email}):
-            doc['template_id'] = str(doc.pop('_id'))
-            del doc['email']
-            results.append(doc)
-        return results
 
     def update(self, payload, template_id):
         email = payload["email"]
@@ -32,11 +21,25 @@ class PersistenceGateway:
         if result.matched_count == 0:
             raise InvalidOperation()
 
+    def get(self, template_id, email):
+        doc = self.__get_collection().find_one(self.__create_query(email, template_id))
+        return self.__transform_doc(doc)
+
+    def get_all(self, email):
+        docs = self.__get_collection().find({"email": email})
+        return list(map(self.__transform_doc, docs))
+
+    @staticmethod
+    def __transform_doc(doc):
+        doc['template_id'] = str(doc.pop('_id'))
+        del doc['email']
+        return doc
+
     def delete(self, email,  template_id):
         query = self.__create_query(email, template_id)
         result = self.__get_collection().delete_one(query)
         if result.deleted_count == 0:
-            raise InvalidOperation("This operation is not permitted")
+            raise InvalidOperation("Item is not found")
 
     def __get_collection(self):
         return self.templates_db['collection']
