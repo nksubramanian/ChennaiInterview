@@ -14,9 +14,9 @@ class PersistenceGateway:
         x = self.__get_collection().insert_one(mydict).inserted_id
         return str(x)
 
-    def update(self, payload, template_id):
-        email = payload["email"]
+    def update(self, template_name, subject, body, email, template_id):
         query = self.__create_query(email, template_id)
+        payload = {'template_name': template_name, 'subject': subject, 'body': body, 'email': email}
         result = self.__get_collection().replace_one(query, payload)
         if result.matched_count == 0:
             raise InvalidOperation()
