@@ -39,7 +39,8 @@ class Business:
         payload = {'template_name': template_name, 'subject': subject, 'body': body, 'email': email}
         x = self.persistence_gateway.update(payload, template_id)
 
-    def delete(self, email, template_id):
+    def delete(self, token, template_id):
+        email = self.authorization.get_email(token)
         x = self.persistence_gateway.delete(email, template_id)
 
 

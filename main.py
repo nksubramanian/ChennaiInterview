@@ -69,13 +69,9 @@ def update(template_id):
 
 @app.route("/template/<template_id>", methods=['DELETE'])
 def delete(template_id):
-    authorization_value = request.headers.get('Authorization')
-    email = authorization.get_email(authorization_value)
-    payload = request.get_json()
-    template_service.delete(email, template_id)
+    token = request.headers.get('Authorization')
+    template_service.delete(token, template_id)
     return {'message': "successful"}, 200
-
-
 
 
 
