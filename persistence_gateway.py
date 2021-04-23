@@ -5,8 +5,10 @@ from pymongo.errors import DuplicateKeyError
 class UnableToInsertDueToDuplicateKeyError(Exception):
     pass
 
+
 class InvalidOperation(Exception):
     pass
+
 
 class UserRepository:
     def __init__(self, templates_db):
@@ -22,7 +24,6 @@ class UserRepository:
             self.__get_user_collection().insert_one(obj)
         except DuplicateKeyError:
             raise UnableToInsertDueToDuplicateKeyError("User already exists")
-
 
     def __get_user_collection(self):
         return self.templates_db['users']
@@ -60,7 +61,7 @@ class TemplateRepository:
 
     def get_all(self, email):
         docs = self.__get_collection().find({"email": email})
-        if doc is None:
+        if docs is None:
             raise InvalidOperation()
         return list(map(self.__transform_doc, docs))
 
@@ -82,6 +83,3 @@ class TemplateRepository:
     @staticmethod
     def __create_query(email, template_id):
         return {"_id": ObjectId(template_id), "email": email}
-
-
-

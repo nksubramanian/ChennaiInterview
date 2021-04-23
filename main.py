@@ -61,7 +61,6 @@ def insert():
         return error.args[0], 500
 
 
-
 @app.route("/template/<template_id>", methods=['GET'])
 def get(template_id):
     try:
@@ -74,8 +73,6 @@ def get(template_id):
         return error.args[0], 500
 
 
-
-
 @app.route("/template", methods=['GET'])
 def get_all():
     try:
@@ -86,8 +83,6 @@ def get_all():
         return error.args[0], 400
     except Exception as error:
         return error.args[0], 500
-
-
 
 
 @app.route("/template/<template_id>", methods=['PUT'])

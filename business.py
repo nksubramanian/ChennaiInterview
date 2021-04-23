@@ -47,14 +47,12 @@ class Business:
             email = self.authorization.get_email(token)
             x = self.persistence_gateway.insert(email, template_name, subject, body)
             return x
-        except InvalidOperation: #is it necssary, can create fake tokens and insert
+        except InvalidOperation: #is it necessary? and can create fake tokens and insert
             raise UserInputError('Wrong Credentials')
         except AuthenticationError:
             raise UserInputError('Authentication failed')
         except Exception:
             raise UserInputError('Miscellaneous')
-
-
 
     def get(self, template_id, token):
         try:
@@ -65,8 +63,6 @@ class Business:
             raise UserInputError('Operation not allowed')
         except AuthenticationError:
             raise UserInputError('Authentication failed')
-        except Exception: #not necessary
-            raise UserInputError('Wrong Credentials invalid token')
 
     def get_all(self, token):
         try:
@@ -85,7 +81,7 @@ class Business:
             email = self.authorization.get_email(token)
             self.persistence_gateway.update(template_name, subject, body, email, template_id)
         except AuthenticationError:
-            raise UserInputError('Authentication failed' )
+            raise UserInputError('Authentication failed')
         except InvalidOperation:
             raise UserInputError('Operation not allowed')
 
@@ -94,6 +90,6 @@ class Business:
             email = self.authorization.get_email(token)
             self.persistence_gateway.delete(email, template_id)
         except AuthenticationError:
-            raise UserInputError('Authentication failed' )
+            raise UserInputError('Authentication failed')
         except InvalidOperation:
             raise UserInputError('Operation not allowed')
