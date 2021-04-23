@@ -7,10 +7,10 @@ class AuthenticationError(Exception):
 
 class Authorization:
 
-    key = "secret"
+    #key = "secret"
 
-    def __init__(self):
-        pass
+    def __init__(self, key):
+        self.key = key
 
     def get_token(self, email):
         token = jwt.encode({"email": email}, self.key, algorithm="HS256").decode("UTF-8")
