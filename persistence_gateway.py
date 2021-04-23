@@ -1,17 +1,25 @@
 from bson import ObjectId
+from pymongo.errors import DuplicateKeyError
 
+
+class UnableToInsertDueToDuplicateKeyError(Exception):
+    pass
 
 class UserRepository:
     def __init__(self, templates_db):
         self.templates_db = templates_db
 
     def create_user(self, first_name, last_name, email, password_hash, salt):
-        obj = {"_id": email,
-               "first_name": first_name,
-               "last_name": last_name,
-               "password_hash": password_hash,
-               "salt": salt}
-        self.__get_user_collection().insert_one(obj)
+        try:
+            obj = {"_id": email,
+                   "first_name": first_name,
+                   "last_name": last_name,
+                   "password_hash": password_hash,
+                   "salt": salt}
+            self.__get_user_collection().insert_one(obj)
+        except DuplicateKeyError:
+            raise UnableToInsertDueToDuplicateKeyError("User already exists")
+
 
     def __get_user_collection(self):
         return self.templates_db['users']

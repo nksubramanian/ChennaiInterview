@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, request
-import jwt
 from business import Business
 from persistence_gateway import TemplateRepository, UserRepository
 from authorization import Authorization
