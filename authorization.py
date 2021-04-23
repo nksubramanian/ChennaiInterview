@@ -1,5 +1,7 @@
 import jwt
 
+class AuthenticationError(Exception):
+    pass
 
 class Authorization:
     def __init__(self):
@@ -16,6 +18,14 @@ class Authorization:
         return claim
 
     def get_email(self, authorization_value):
-        claim = self.__decode(authorization_value)
-        email = claim["email"]
-        return email
+        try:
+            claim = self.__decode(authorization_value)
+            email = claim["email"]
+            if self.get_token(email) != authorization_value:
+                print("signature is not 100% genuine, tampered")
+                raise AuthenticationError("Authentication failed")
+            return email
+        except Exception:
+            raise AuthenticationError("Authentication failed")
+
+

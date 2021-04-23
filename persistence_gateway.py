@@ -5,6 +5,9 @@ from pymongo.errors import DuplicateKeyError
 class UnableToInsertDueToDuplicateKeyError(Exception):
     pass
 
+class InvalidOperation(Exception):
+    pass
+
 class UserRepository:
     def __init__(self, templates_db):
         self.templates_db = templates_db
@@ -38,6 +41,8 @@ class TemplateRepository:
     def insert(self, email, template_name, subject, body):
         payload = {'template_name': template_name, 'subject': subject, 'body': body, 'email': email}
         x = self.__get_collection().insert_one(payload).inserted_id
+        if x is None: #is it necessary
+            raise InvalidOperation("Operation failed")
         return str(x)
 
     def update(self, template_name, subject, body, email, template_id):
@@ -55,6 +60,8 @@ class TemplateRepository:
 
     def get_all(self, email):
         docs = self.__get_collection().find({"email": email})
+        if doc is None:
+            raise InvalidOperation()
         return list(map(self.__transform_doc, docs))
 
     @staticmethod
@@ -77,5 +84,4 @@ class TemplateRepository:
         return {"_id": ObjectId(template_id), "email": email}
 
 
-class InvalidOperation(Exception):
-    pass
+

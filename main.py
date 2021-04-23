@@ -44,29 +44,51 @@ def login():
         return error.args[0], 500
     return jsonify({"token": token}), 202
 
+
 @app.route("/template", methods=['POST'])
 def insert():
-    token = get_token(request)
-    record = request.get_json()
-    template_name = record['template_name']
-    subject = record['subject']
-    body = record['body']
-    x = template_service.insert(token, template_name, subject, body)
-    return {'template_id': x}, 200
+    try:
+        token = get_token(request)
+        record = request.get_json()
+        template_name = record['template_name']
+        subject = record['subject']
+        body = record['body']
+        x = template_service.insert(token, template_name, subject, body)
+        return {'template_id': x}, 200
+    except UserInputError as error:
+        return error.args[0], 400
+    except Exception as error:
+        return error.args[0], 500
+
 
 
 @app.route("/template/<template_id>", methods=['GET'])
 def get(template_id):
-    token = get_token(request)
-    x = template_service.get(template_id, token)
-    return jsonify(x), 200
+    try:
+        token = get_token(request)
+        x = template_service.get(template_id, token)
+        return jsonify(x), 200
+    except UserInputError as error:
+        return error.args[0], 400
+    except Exception as error:
+        return error.args[0], 500
+
+
 
 
 @app.route("/template", methods=['GET'])
 def get_all():
-    token = get_token(request)
-    temp = template_service.get_all(token)
-    return jsonify(temp), 202
+    try:
+        token = get_token(request)
+        temp = template_service.get_all(token)
+        return jsonify(temp), 202
+    except UserInputError as error:
+        return error.args[0], 400
+    except Exception as error:
+        return error.args[0], 500
+
+
+
 
 @app.route("/template/<template_id>", methods=['PUT'])
 def update(template_id):
