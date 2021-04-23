@@ -1,6 +1,12 @@
 import hashlib
 import uuid
 
+from persistence_gateway import UnableToInsertDueToDuplicateKeyError
+
+
+class UserInputError(Exception):
+    pass
+
 
 class Business:
     def __init__(self, template_repository, authorization, user_repository):
@@ -9,9 +15,12 @@ class Business:
         self.user_repository = user_repository
 
     def register(self, email, password, first_name, last_name):
-        salt = uuid.uuid4().hex
-        hashed_password = self.hash_password(password, salt)
-        self.user_repository.create_user(first_name, last_name, email, hashed_password, salt)
+        try:
+            salt = uuid.uuid4().hex
+            hashed_password = self.hash_password(password, salt)
+            self.user_repository.create_user(first_name, last_name, email, hashed_password, salt)
+        except UnableToInsertDueToDuplicateKeyError:
+            raise UserInputError('ID already exist')
 
     @staticmethod
     def hash_password(password, salt):

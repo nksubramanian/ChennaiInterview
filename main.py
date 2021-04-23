@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from business import Business
+from business import UserInputError
 from persistence_gateway import TemplateRepository, UserRepository
 from authorization import Authorization
 import pymongo
@@ -16,12 +17,15 @@ template_service = Business(template_repository, authorization, user_repository)
 
 @app.route("/register", methods=['POST'])
 def register():
-    record = request.get_json()
-    first_name = record['first_name']
-    last_name = record['last_name']
-    email = record['email']
-    password = record['password']
-    template_service.register(email, password, first_name, last_name)
+    try:
+        record = request.get_json()
+        first_name = record['first_name']
+        last_name = record['last_name']
+        email = record['email']
+        password = record['password']
+        template_service.register(email, password, first_name, last_name)
+    except UserInputError as error:
+        return error.args[0], 400
     return "", 202
 
 @app.route("/login", methods=['POST'])
