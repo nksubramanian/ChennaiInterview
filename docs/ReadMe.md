@@ -2,7 +2,7 @@
 ## What's done
 - The intention of the code is to meet the requirement as specified in docs/PythonTest.txt
 - The code is developed using Python 3.9 using Virtual environment for package isolation
-- The application is build using Flask (Other dependencies are in Requirements.txt)
+- The application is build using Flask (Other dependencies are in requirements.txt)
 
 ## Pre-requisites  
 - The application has a pre-requisite of MongoDB Daemon
