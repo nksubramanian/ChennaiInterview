@@ -1,12 +1,8 @@
 import hashlib
 import uuid
-
+from business_errors import UserInputError
 from persistence_gateway import UnableToInsertDueToDuplicateKeyError, InvalidOperation
 from authorization import AuthenticationError
-
-
-class UserInputError(Exception):
-    pass
 
 
 class Business:
