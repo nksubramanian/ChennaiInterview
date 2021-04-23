@@ -99,7 +99,7 @@ def update(template_id):
         subject = record['subject']
         body = record['body']
         template_service.update(token, template_name, subject, body, template_id)
-        return {'message': "successful"}, 200
+        return "", 200
     except UserInputError as error:
         return error.args[0], 400
     except Exception as error:
@@ -108,9 +108,14 @@ def update(template_id):
 
 @app.route("/template/<template_id>", methods=['DELETE'])
 def delete(template_id):
-    token = get_token(request)
-    template_service.delete(token, template_id)
-    return {'message': "successful"}, 200
+    try:
+        token = get_token(request)
+        template_service.delete(token, template_id)
+        return "", 200
+    except UserInputError as error:
+        return error.args[0], 400
+    except Exception as error:
+        return error.args[0], 500
 
 
 def get_token(request_):

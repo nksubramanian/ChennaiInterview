@@ -30,13 +30,16 @@ class Business:
         return hashed_password
 
     def login(self, email, password):
-        user = self.user_repository.get_user(email)
-        salt = user["salt"]
-        hashed_password_db = user["password_hash"]
-        hashed_password = self.hash_password(password, salt)
-        if hashed_password_db == hashed_password:
-            return self.authorization.get_token(email)
-        else:
+        try:
+            user = self.user_repository.get_user(email)
+            salt = user["salt"]
+            hashed_password_db = user["password_hash"]
+            hashed_password = self.hash_password(password, salt)
+            if hashed_password_db == hashed_password:
+                return self.authorization.get_token(email)
+            else:
+                raise UserInputError('Wrong Credentials')
+        except InvalidOperation:
             raise UserInputError('Wrong Credentials')
 
     def insert(self, token, template_name, subject, body):
@@ -87,5 +90,10 @@ class Business:
             raise UserInputError('Operation not allowed')
 
     def delete(self, token, template_id):
-        email = self.authorization.get_email(token)
-        self.persistence_gateway.delete(email, template_id)
+        try:
+            email = self.authorization.get_email(token)
+            self.persistence_gateway.delete(email, template_id)
+        except AuthenticationError:
+            raise UserInputError('Authentication failed' )
+        except InvalidOperation:
+            raise UserInputError('Operation not allowed')
