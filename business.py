@@ -78,8 +78,13 @@ class Business:
             raise UserInputError('Wrong Credentials invalid token')
 
     def update(self, token, template_name, subject, body, template_id):
-        email = self.authorization.get_email(token)
-        self.persistence_gateway.update(template_name, subject, body, email, template_id)
+        try:
+            email = self.authorization.get_email(token)
+            self.persistence_gateway.update(template_name, subject, body, email, template_id)
+        except AuthenticationError:
+            raise UserInputError('Authentication failed' )
+        except InvalidOperation:
+            raise UserInputError('Operation not allowed')
 
     def delete(self, token, template_id):
         email = self.authorization.get_email(token)

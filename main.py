@@ -92,13 +92,18 @@ def get_all():
 
 @app.route("/template/<template_id>", methods=['PUT'])
 def update(template_id):
-    token = get_token(request)
-    record = request.get_json()
-    template_name = record['template_name']
-    subject = record['subject']
-    body = record['body']
-    template_service.update(token, template_name, subject, body, template_id)
-    return {'message': "successful"}, 200
+    try:
+        token = get_token(request)
+        record = request.get_json()
+        template_name = record['template_name']
+        subject = record['subject']
+        body = record['body']
+        template_service.update(token, template_name, subject, body, template_id)
+        return {'message': "successful"}, 200
+    except UserInputError as error:
+        return error.args[0], 400
+    except Exception as error:
+        return error.args[0], 500
 
 
 @app.route("/template/<template_id>", methods=['DELETE'])
