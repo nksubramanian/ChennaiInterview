@@ -26,14 +26,22 @@ def register():
         template_service.register(email, password, first_name, last_name)
     except UserInputError as error:
         return error.args[0], 400
+    except Exception as error:
+        return error.args[0], 500
     return "", 202
+
 
 @app.route("/login", methods=['POST'])
 def login():
-    record = request.get_json()
-    email = record['email']
-    password = record['password']
-    token = template_service.login(email, password)
+    try:
+        record = request.get_json()
+        email = record['email']
+        password = record['password']
+        token = template_service.login(email, password)
+    except UserInputError as error:
+        return error.args[0], 400
+    except Exception as error:
+        return error.args[0], 500
     return jsonify({"token": token}), 202
 
 @app.route("/template", methods=['POST'])

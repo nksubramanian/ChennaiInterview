@@ -1,7 +1,7 @@
 import hashlib
 import uuid
 
-from persistence_gateway import UnableToInsertDueToDuplicateKeyError
+from persistence_gateway import UnableToInsertDueToDuplicateKeyError, InvalidOperation
 
 
 class UserInputError(Exception):
@@ -35,7 +35,9 @@ class Business:
         hashed_password = self.hash_password(password, salt)
         if hashed_password_db == hashed_password:
             return self.authorization.get_token(email)
-        raise Exception()
+        else:
+            raise UserInputError('Wrong Credentials')  #should this entire func be put in try
+
 
     def get_all(self, token):
         email = self.authorization.get_email(token)

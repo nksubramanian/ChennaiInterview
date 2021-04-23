@@ -27,7 +27,7 @@ class UserRepository:
     def get_user(self, email):
         user = self.__get_user_collection().find_one({"_id": email})
         if user is None:
-            raise InvalidOperation()
+            raise InvalidOperation("Wrong Credentials")
         return user
 
 
