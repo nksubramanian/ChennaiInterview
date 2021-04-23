@@ -8,12 +8,12 @@ import os
 connection_string = os.environ.get('connection_string')
 mongo_client = pymongo.MongoClient(connection_string)
 templates_db = mongo_client["mydatabase"]
+key = os.environ.get('key')
 authorization = Authorization("secret1")
 template_repository = TemplateRepository(templates_db)
 user_repository = UserRepository(templates_db)
 template_service = Business(template_repository, authorization, user_repository)
 app = create_app(template_service)
-print(os.environ.get('key'))
 
 
 
