@@ -78,7 +78,7 @@ class TemplateRepository:
             raise InvalidOperation("Item is not found")
 
     def __get_collection(self):
-        return self.templates_db['collection']
+        return self.templates_db['template']
 
     @staticmethod
     def __create_query(email, template_id):
