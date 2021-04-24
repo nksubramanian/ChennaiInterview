@@ -43,7 +43,7 @@ class Business:
             email = self.authorization.get_email(token)
             x = self.persistence_gateway.insert(email, template_name, subject, body)
             return x
-        except InvalidOperation: #is it necessary? and can create fake tokens and insert
+        except InvalidOperation:
             raise UserInputError('Wrong Credentials')
         except AuthenticationError:
             raise UserInputError('Authentication failed')
