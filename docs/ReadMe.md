@@ -6,8 +6,12 @@
 
 ## Pre-requisites  
 - The application has a pre-requisite of MongoDB Daemon
-- The mongodb uri is set as env var named connection_string(mongodb://localhost:27017/)
--The key for for obtaining jwt token is stored as key in the end
+- The mongodb uri is set as env var named SPICEBLUE_CONNECTION_STRING
+- If the environment variable is not set, then the connection string defaults to database in Atlas
+- The secret for creating tokens is set as the environment variable SPICEBLUE_AUTHORIZATION_SECRET'
+- If the environment variable is not set, then secret defaults to "secret"
+- The key for for obtaining jwt token is stored as key in the end
+
 
 ## Running
 - The application's entry point is startup.py
