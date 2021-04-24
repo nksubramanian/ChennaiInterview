@@ -6,6 +6,7 @@ from persistence_gateway import UserRepository, TemplateRepository
 import os
 
 SpiceBlue_connection_string = os.environ.get('SpiceBlue_connection_string')
+SpiceBlue_connection_string = "mongodb+srv://test:test@cluster0.z8mo0.mongodb.net/mydatabase?retryWrites=true&w=majority"
 mongo_client = pymongo.MongoClient(SpiceBlue_connection_string)
 templates_db = mongo_client["mydatabase"]
 SpiceBlue_authorization_secret = os.environ.get('SpiceBlue_authorization_secret')

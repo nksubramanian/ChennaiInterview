@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "ca019635-42ce-439d-b3c2-aa960bb350e8",
-		"name": "Chennai",
+		"name": "SpiceBlue",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -23,7 +23,12 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.collectionVariables.set(\"email1\",\"{{$randomEmail}}\")"
+							"function getRandomString() {\r",
+							"    return Math.random().toString(36).substring(2);\r",
+							"}\r",
+							"var email = getRandomString()+\"@gmail.com\";\r",
+							"pm.collectionVariables.set(\"email1\",email)\r",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -73,7 +78,13 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.collectionVariables.set(\"email2\",\"{{$randomEmail}}\")"
+							"function getRandomString() {\r",
+							"    return Math.random().toString(36).substring(2);\r",
+							"}\r",
+							"var email = getRandomString()+\"@gmail.com\";\r",
+							"pm.collectionVariables.set(\"email2\",email)\r",
+							"\r",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -127,7 +138,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\":\"subramanian@live.com\", \r\n  \"password\":\"subbu\"\r\n}\r\n",
+					"raw": "{\r\n  \"email\":\"{{email1}}\", \r\n  \"password\":\"subbu\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -182,7 +193,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\":\"3subbu.articles@gmail.com\", \r\n  \"password\":\"subbu\"\r\n}",
+					"raw": "{\r\n  \"email\":\"{{email2}}\", \r\n  \"password\":\"subbu\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -894,7 +905,7 @@
 			"response": []
 		},
 		{
-			"name": "Register Request 1 success Copy",
+			"name": "Register again same email id",
 			"event": [
 				{
 					"listen": "test",
@@ -922,7 +933,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"first_name\":\"subbu\",\r\n    \"last_name\":\"NK\",\r\n    \"email\":\"{{pm.collectionVariables.get(email1);}}\",\r\n    \"password\":\"subbu\"\r\n}",
+					"raw": "{\r\n    \"first_name\":\"subbu\",\r\n    \"last_name\":\"NK\",\r\n    \"email\":\"{{email1}}\",\r\n    \"password\":\"subbu\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
