@@ -5,11 +5,11 @@ from app import create_app
 from persistence_gateway import UserRepository, TemplateRepository
 import os
 
-connection_string = os.environ.get('connection_string')
-mongo_client = pymongo.MongoClient(connection_string)
+SpiceBlue_connection_string = os.environ.get('SpiceBlue_connection_string')
+mongo_client = pymongo.MongoClient(SpiceBlue_connection_string)
 templates_db = mongo_client["mydatabase"]
-key = os.environ.get('key')
-authorization = Authorization("secret1")
+SpiceBlue_authorization_secret = os.environ.get('SpiceBlue_authorization_secret')
+authorization = Authorization(SpiceBlue_authorization_secret)
 template_repository = TemplateRepository(templates_db)
 user_repository = UserRepository(templates_db)
 template_service = Business(template_repository, authorization, user_repository)

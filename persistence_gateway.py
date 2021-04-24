@@ -42,7 +42,7 @@ class TemplateRepository:
     def insert(self, email, template_name, subject, body):
         payload = {'template_name': template_name, 'subject': subject, 'body': body, 'email': email}
         x = self.__get_collection().insert_one(payload).inserted_id
-        if x is None: #is it necessary
+        if x is None:
             raise InvalidOperation("Operation failed")
         return str(x)
 
