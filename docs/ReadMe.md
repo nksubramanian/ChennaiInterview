@@ -17,3 +17,8 @@
 ## Integration Tests
 - The integration tests are available as a post man collection (2.1 version)
 - The collection can be found at docs/IntegrationTest.postman_collection.json
+
+## To be Done
+-The status code implemented is not as per REST convention
+-Here all successful response has 200, invalid request 400 and the remaining 500
+-Unit test needs to be done
